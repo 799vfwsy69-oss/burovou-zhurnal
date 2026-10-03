@@ -1,0 +1,1713 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111827">
+<title>RC Driller 7.1</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  background:#f3f4f6;
+  color:#111827;
+  padding-bottom:82px;
+}
+header{
+  background:#111827;
+  color:white;
+  padding:16px;
+  position:sticky;
+  top:0;
+  z-index:20;
+}
+header h1{margin:0;font-size:22px}
+header small{color:#9ca3af}
+
+main{padding:12px;max-width:700px;margin:auto}
+
+.card{
+  background:white;
+  border-radius:16px;
+  padding:16px;
+  margin-bottom:12px;
+  box-shadow:0 2px 8px rgba(0,0,0,.07);
+}
+.card h2{
+  margin:0 0 14px;
+  font-size:19px;
+}
+.card h3{
+  margin:16px 0 8px;
+  font-size:16px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+.grid3{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+}
+
+label{
+  display:block;
+  font-size:13px;
+  color:#6b7280;
+  margin-bottom:5px;
+}
+input,select,textarea{
+  width:100%;
+  padding:13px;
+  border:1px solid #d1d5db;
+  border-radius:11px;
+  font-size:16px;
+  background:white;
+}
+textarea{min-height:80px;resize:vertical}
+
+button{
+  border:0;
+  border-radius:12px;
+  padding:13px 15px;
+  font-size:16px;
+  font-weight:600;
+  cursor:pointer;
+}
+button:active{transform:scale(.98)}
+
+.btn{
+  background:#111827;
+  color:white;
+  width:100%;
+}
+.btn2{
+  background:#e5e7eb;
+  color:#111827;
+}
+.btn-green{background:#16a34a;color:white}
+.btn-red{background:#dc2626;color:white}
+.btn-blue{background:#2563eb;color:white}
+.btn-orange{background:#ea580c;color:white}
+
+.big{
+  font-size:30px;
+  font-weight:800;
+}
+.center{text-align:center}
+
+.depth{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  margin:12px 0;
+}
+.depth-value{
+  font-size:40px;
+  font-weight:800;
+  min-width:130px;
+  text-align:center;
+}
+.depth button{
+  width:60px;
+  height:55px;
+  font-size:25px;
+}
+
+.status{
+  padding:10px;
+  border-radius:10px;
+  background:#f3f4f6;
+  text-align:center;
+  margin:10px 0;
+}
+.running{background:#dcfce7;color:#166534}
+.paused{background:#fef3c7;color:#92400e}
+
+.metric{
+  background:#f9fafb;
+  border-radius:12px;
+  padding:12px;
+  text-align:center;
+}
+.metric b{
+  display:block;
+  font-size:23px;
+  margin-top:3px;
+}
+
+.money{
+  background:#111827;
+  color:white;
+  border-radius:16px;
+  padding:18px;
+  margin-bottom:12px;
+}
+.money .amount{
+  font-size:32px;
+  font-weight:800;
+}
+.money small{color:#d1d5db}
+
+.salary-row{
+  display:flex;
+  justify-content:space-between;
+  padding:11px 0;
+  border-bottom:1px solid #e5e7eb;
+}
+.salary-row:last-child{border-bottom:0}
+.salary-total{
+  font-size:21px;
+  font-weight:800;
+}
+
+.record{
+  border:1px solid #e5e7eb;
+  border-radius:12px;
+  padding:12px;
+  margin-bottom:9px;
+}
+.record strong{font-size:16px}
+
+.badge{
+  display:inline-block;
+  padding:4px 8px;
+  border-radius:8px;
+  background:#e5e7eb;
+  font-size:12px;
+}
+
+.hidden{display:none!important}
+
+.bottom{
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  background:white;
+  border-top:1px solid #d1d5db;
+  display:flex;
+  z-index:50;
+  padding-bottom:env(safe-area-inset-bottom);
+}
+.nav{
+  flex:1;
+  border-radius:0;
+  background:white;
+  color:#6b7280;
+  font-size:11px;
+  padding:10px 2px;
+}
+.nav.active{
+  color:#111827;
+  font-weight:800;
+}
+.nav span{
+  display:block;
+  font-size:21px;
+  margin-bottom:2px;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:13px;
+}
+th,td{
+  border-bottom:1px solid #e5e7eb;
+  padding:8px 5px;
+  text-align:left;
+}
+
+@media(max-width:430px){
+  .grid3{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>⛏️ RC Driller 7.1</h1>
+  <small>OFFLINE • Буровой журнал</small>
+</header>
+
+<main>
+
+<!-- БУРЕНИЕ -->
+<section id="page-drilling">
+
+<div class="card">
+<h2>⛏️ Текущее бурение</h2>
+
+<div class="grid">
+<div>
+<label>Скважина</label>
+<input id="quickHole" placeholder="№ скважины">
+</div>
+
+<div>
+<label>№ бурения</label>
+<input id="quickNumber" type="number" value="1">
+</div>
+</div>
+
+<div class="status" id="drillStatus">Не начато</div>
+
+<div class="center">
+<label>Текущая глубина</label>
+
+<div class="depth">
+<button class="btn2" onclick="changeDepth(-1)">−</button>
+<div class="depth-value" id="depthValue">0.0</div>
+<button class="btn2" onclick="changeDepth(1)">+</button>
+</div>
+
+<div class="grid3">
+<button class="btn2" onclick="changeDepth(-0.5)">−0.5</button>
+<button class="btn2" onclick="changeDepth(-0.1)">−0.1</button>
+<button class="btn2" onclick="changeDepth(0.1)">+0.1</button>
+<button class="btn2" onclick="changeDepth(0.5)">+0.5</button>
+<button class="btn2" onclick="changeDepth(1)">+1</button>
+<button class="btn2" onclick="changeDepth(5)">+5</button>
+</div>
+</div>
+
+<br>
+
+<div class="grid">
+<div>
+<label>Точная глубина</label>
+<input id="manualDepth" type="number" step="0.1" placeholder="м">
+</div>
+<div>
+<label>Метры бурения</label>
+<input id="startDepth" type="number" step="0.1" placeholder="Начало">
+</div>
+</div>
+
+<br>
+
+<div class="grid">
+<div class="metric">
+Метров
+<b id="currentMeters">0.0</b>
+</div>
+<div class="metric">
+Скорость
+<b id="currentSpeed">0.0</b>
+м/ч
+</div>
+</div>
+
+<br>
+
+<div class="grid">
+<button class="btn-green" onclick="startDrilling()">▶ Старт</button>
+<button class="btn-orange" onclick="togglePause()">Ⅱ Пауза</button>
+</div>
+
+<br>
+
+<button class="btn-red" onclick="finishDrilling()">■ Завершить бурение</button>
+
+<div class="status">
+Время бурения: <b id="timer">00:00:00</b>
+</div>
+
+</div>
+
+<!-- ПАРАМЕТРЫ -->
+<div class="card">
+<h2>⚙️ Параметры RC</h2>
+
+<div class="grid">
+<div>
+<label>Давление, бар</label>
+<input id="pPressure" type="number">
+</div>
+<div>
+<label>Расход воздуха</label>
+<input id="pAir" type="number">
+</div>
+<div>
+<label>Обороты RPM</label>
+<input id="pRpm" type="number">
+</div>
+<div>
+<label>Нагрузка</label>
+<input id="pLoad" type="number">
+</div>
+<div>
+<label>Давление подачи</label>
+<input id="pFeed" type="number">
+</div>
+<div>
+<label>Масло</label>
+<input id="pOil" type="number">
+</div>
+</div>
+
+<br>
+<button class="btn" onclick="saveParameters()">Сохранить параметры</button>
+</div>
+
+<!-- ПРОСТОЙ -->
+<div class="card">
+<h2>⏸ Простой</h2>
+
+<div class="grid">
+<div>
+<label>Причина</label>
+<select id="downtimeType">
+<option>Ремонт</option>
+<option>Замена инструмента</option>
+<option>Компрессор</option>
+<option>Ожидание техники</option>
+<option>Ожидание воды</option>
+<option>Геология</option>
+<option>Погода</option>
+<option>ТО</option>
+<option>Другое</option>
+</select>
+</div>
+
+<div>
+<label>Минуты</label>
+<input id="downtimeMinutes" type="number" value="10">
+</div>
+</div>
+
+<br>
+<button class="btn2" onclick="saveDowntime()">Добавить простой</button>
+
+<div id="downtimeTotal"></div>
+</div>
+
+</section>
+
+<!-- СКВАЖИНА -->
+<section id="page-hole" class="hidden">
+
+<div class="card">
+<h2>📍 Паспорт скважины</h2>
+
+<div class="grid">
+<div>
+<label>Номер</label>
+<input id="holeNumber">
+</div>
+<div>
+<label>Проектная глубина</label>
+<input id="holeProjectDepth" type="number">
+</div>
+<div>
+<label>Диаметр</label>
+<input id="holeDiameter">
+</div>
+<div>
+<label>Буровой коронок / долото</label>
+<input id="holeBit">
+</div>
+<div>
+<label>X</label>
+<input id="holeX">
+</div>
+<div>
+<label>Y</label>
+<input id="holeY">
+</div>
+<div>
+<label>Z</label>
+<input id="holeZ">
+</div>
+<div>
+<label>Азимут</label>
+<input id="holeAzimuth">
+</div>
+</div>
+
+<br>
+
+<label>Примечание</label>
+<textarea id="holeNote"></textarea>
+
+<br>
+<button class="btn" onclick="saveHole()">Сохранить скважину</button>
+</div>
+
+<div class="card">
+<h2>📋 Скважины</h2>
+<div id="holesList"></div>
+</div>
+
+</section>
+
+<!-- ИНСТРУМЕНТ -->
+<section id="page-tool" class="hidden">
+
+<div class="card">
+<h2>🔧 Учёт инструмента</h2>
+
+<div class="grid">
+<div>
+<label>ID инструмента</label>
+<input id="toolId" placeholder="Например DTH-01">
+</div>
+<div>
+<label>Начальный метраж</label>
+<input id="toolStart" type="number">
+</div>
+</div>
+
+<br>
+<button class="btn" onclick="saveTool()">Добавить инструмент</button>
+</div>
+
+<div class="card">
+<h2>🔧 Инструменты</h2>
+<div id="toolsList"></div>
+</div>
+
+</section>
+
+<!-- ИСТОРИЯ -->
+<section id="page-history" class="hidden">
+
+<div class="card">
+<h2>📊 Статистика</h2>
+
+<div class="grid">
+<div class="metric">
+Всего метров
+<b id="statMeters">0</b>
+</div>
+<div class="metric">
+Бурений
+<b id="statDrillings">0</b>
+</div>
+<div class="metric">
+Средняя скорость
+<b id="statSpeed">0</b>
+</div>
+<div class="metric">
+Простой
+<b id="statDowntime">0</b>
+мин
+</div>
+</div>
+</div>
+
+<div class="card">
+<h2>📜 История бурения</h2>
+<div id="historyList"></div>
+</div>
+
+<div class="card">
+<h2>⚙️ История параметров</h2>
+<div id="parameterHistory"></div>
+</div>
+
+</section>
+
+<!-- ОТЧЁТ -->
+<section id="page-report" class="hidden">
+
+<div class="card">
+<h2>📄 Отчёт смены</h2>
+
+<div class="grid">
+<div>
+<label>Дата</label>
+<input id="shiftDate" type="date">
+</div>
+
+<div>
+<label>Смена</label>
+<select id="shiftType">
+<option>Дневная</option>
+<option>Ночная</option>
+</select>
+</div>
+
+<div>
+<label>Оператор</label>
+<input id="operator">
+</div>
+
+<div>
+<label>Буровая</label>
+<input id="rig">
+</div>
+</div>
+
+<br>
+
+<label>Участок / объект</label>
+<input id="site">
+
+<br><br>
+
+<button class="btn" onclick="saveShift()">Сохранить смену</button>
+
+<br><br>
+
+<button class="btn-blue" onclick="shareReport()">📤 Поделиться отчётом</button>
+
+<br><br>
+
+<button class="btn2" onclick="exportCSV()">📊 Скачать CSV</button>
+
+<br><br>
+
+<button class="btn2" onclick="backupData()">💾 Резервная копия</button>
+
+<br><br>
+
+<button class="btn-red" onclick="clearData()">🗑 Очистить данные</button>
+</div>
+
+</section>
+
+<!-- ЗАРАБОТОК -->
+<section id="page-money" class="hidden">
+
+<div class="money">
+<small>ЗАРАБОТОК ЗА МЕСЯЦ</small>
+<div class="amount" id="monthNet">0 ₸</div>
+<small>после удержаний</small>
+</div>
+
+<div class="card">
+<h2>💰 Настройки оплаты</h2>
+
+<div class="grid">
+
+<div>
+<label>Оклад за месяц, ₸</label>
+<input id="salaryBase" type="number" value="180000">
+</div>
+
+<div>
+<label>Ставка за метр, ₸</label>
+<input id="meterRate" type="number" value="200">
+</div>
+
+<div>
+<label>Премия, ₸</label>
+<input id="bonus" type="number" value="0">
+</div>
+
+<div>
+<label>Доплаты, ₸</label>
+<input id="extraPay" type="number" value="0">
+</div>
+
+<div>
+<label>Удержания, ₸</label>
+<input id="deductions" type="number" value="0">
+</div>
+
+<div>
+<label>График</label>
+<select id="schedule">
+<option value="15/15">15 / 15</option>
+<option value="20/10">20 / 10</option>
+<option value="5/2">5 / 2</option>
+<option value="Другой">Другой</option>
+</select>
+</div>
+
+</div>
+
+<br>
+<button class="btn" onclick="saveSalarySettings()">💾 Сохранить оплату</button>
+</div>
+
+<div class="card">
+<h2>📊 Текущая вахта</h2>
+
+<div class="salary-row">
+<span>Отработано метров</span>
+<b id="salaryShiftMeters">0 м</b>
+</div>
+
+<div class="salary-row">
+<span>Ставка за метр</span>
+<b id="salaryShiftRate">0 ₸</b>
+</div>
+
+<div class="salary-row">
+<span>За метры</span>
+<b id="salaryMetersMoney">0 ₸</b>
+</div>
+
+<div class="salary-row">
+<span>Оклад</span>
+<b id="salaryShiftBase">0 ₸</b>
+</div>
+
+<div class="salary-row">
+<span>Премия</span>
+<b id="salaryBonus">0 ₸</b>
+</div>
+
+<div class="salary-row">
+<span>Доплаты</span>
+<b id="salaryExtra">0 ₸</b>
+</div>
+
+<div class="salary-row salary-total">
+<span>Начислено</span>
+<b id="salaryGross">0 ₸</b>
+</div>
+
+<div class="salary-row">
+<span>Удержания</span>
+<b id="salaryDeduction">0 ₸</b>
+</div>
+
+<div class="salary-row salary-total">
+<span>На руки</span>
+<b id="salaryNet">0 ₸</b>
+</div>
+
+</div>
+
+<div class="card">
+<h2>📅 За текущий месяц</h2>
+
+<div class="grid">
+
+<div class="metric">
+Метров
+<b id="monthMeters">0</b>
+</div>
+
+<div class="metric">
+Бурений
+<b id="monthDrillings">0</b>
+</div>
+
+<div class="metric">
+Смен
+<b id="monthShifts">0</b>
+</div>
+
+<div class="metric">
+За метры
+<b id="monthMeterMoney">0</b>
+</div>
+
+</div>
+
+<br>
+
+<div class="salary-row">
+<span>Оклад</span>
+<b id="monthBase">0 ₸</b>
+</div>
+
+<div class="salary-row">
+<span>Премии</span>
+<b id="monthBonus">0 ₸</b>
+</div>
+
+<div class="salary-row">
+<span>Доплаты</span>
+<b id="monthExtra">0 ₸</b>
+</div>
+
+<div class="salary-row salary-total">
+<span>Начислено</span>
+<b id="monthGross">0 ₸</b>
+</div>
+
+<div class="salary-row">
+<span>Удержания</span>
+<b id="monthDeduction">0 ₸</b>
+</div>
+
+<div class="salary-row salary-total">
+<span>На руки</span>
+<b id="monthNet2">0 ₸</b>
+</div>
+
+</div>
+
+<div class="card">
+<h2>📜 История выплат</h2>
+<div id="salaryHistory"></div>
+</div>
+
+</section>
+
+</main>
+
+<!-- НИЖНЕЕ МЕНЮ -->
+<nav class="bottom">
+
+<button class="nav active" onclick="openPage('drilling',this)">
+<span>⛏️</span>Бурение
+</button>
+
+<button class="nav" onclick="openPage('hole',this)">
+<span>📍</span>Скважина
+</button>
+
+<button class="nav" onclick="openPage('tool',this)">
+<span>🔧</span>Инструмент
+</button>
+
+<button class="nav" onclick="openPage('history',this)">
+<span>📊</span>История
+</button>
+
+<button class="nav" onclick="openPage('money',this)">
+<span>💰</span>Заработок
+</button>
+
+<button class="nav" onclick="openPage('report',this)">
+<span>📄</span>Отчёт
+</button>
+
+</nav>
+
+<script>
+
+const KEY="rcDriller71";
+const ACTIVE_KEY="rcDriller71_active";
+
+let data=JSON.parse(localStorage.getItem(KEY)||'null')||{
+ drillings:[],
+ parameters:[],
+ downtime:[],
+ holes:[],
+ tools:[],
+ shifts:[],
+ salaryHistory:[],
+ salary:{
+   base:180000,
+   rate:200,
+   bonus:0,
+   extra:0,
+   deductions:0,
+   schedule:"15/15"
+ }
+};
+
+let active=JSON.parse(localStorage.getItem(ACTIVE_KEY)||'null');
+
+function save(){
+ localStorage.setItem(KEY,JSON.stringify(data));
+}
+
+function saveActive(){
+ localStorage.setItem(ACTIVE_KEY,JSON.stringify(active));
+}
+
+function openPage(page,btn){
+
+ document.querySelectorAll("main>section").forEach(s=>{
+   s.classList.add("hidden");
+ });
+
+ document.getElementById("page-"+page).classList.remove("hidden");
+
+ document.querySelectorAll(".nav").forEach(n=>n.classList.remove("active"));
+
+ if(btn)btn.classList.add("active");
+
+ update();
+}
+
+function changeDepth(v){
+
+ let d=parseFloat(document.getElementById("depthValue").textContent)||0;
+
+ d+=v;
+
+ if(d<0)d=0;
+
+ d=Math.round(d*10)/10;
+
+ document.getElementById("depthValue").textContent=d.toFixed(1);
+
+ updateQuick();
+}
+
+function setManualDepth(){
+
+ let v=parseFloat(document.getElementById("manualDepth").value);
+
+ if(isNaN(v))return;
+
+ if(v<0)v=0;
+
+ document.getElementById("depthValue").textContent=v.toFixed(1);
+
+ updateQuick();
+}
+
+document.getElementById("manualDepth").addEventListener("change",setManualDepth);
+
+function startDrilling(){
+
+ if(active && active.running){
+   alert("Бурение уже идёт");
+   return;
+ }
+
+ let hole=document.getElementById("quickHole").value||"Без номера";
+
+ let depth=parseFloat(document.getElementById("depthValue").textContent)||0;
+
+ active={
+   id:Date.now(),
+   number:document.getElementById("quickNumber").value||1,
+   hole:hole,
+   startDepth:depth,
+   endDepth:depth,
+   start:Date.now(),
+   pauseMs:0,
+   pausedAt:null,
+   running:true
+ };
+
+ saveActive();
+
+ renderActive();
+ startTimer();
+}
+
+function togglePause(){
+
+ if(!active)return;
+
+ if(active.running){
+
+   active.running=false;
+   active.pausedAt=Date.now();
+
+ }else{
+
+   if(active.pausedAt){
+     active.pauseMs+=(Date.now()-active.pausedAt);
+   }
+
+   active.pausedAt=null;
+   active.running=true;
+ }
+
+ saveActive();
+ renderActive();
+}
+
+function getPureMs(){
+
+ if(!active)return 0;
+
+ let end=Date.now();
+
+ let pause=active.pauseMs||0;
+
+ if(active.pausedAt){
+   pause+=end-active.pausedAt;
+ }
+
+ return Math.max(0,end-active.start-pause);
+}
+
+function finishDrilling(){
+
+ if(!active){
+   alert("Нет активного бурения");
+   return;
+ }
+
+ let depth=parseFloat(document.getElementById("depthValue").textContent)||0;
+
+ active.endDepth=depth;
+
+ let meters=Math.max(0,depth-active.startDepth);
+
+ let pureMs=getPureMs();
+
+ data.drillings.unshift({
+   id:active.id,
+   number:active.number,
+   hole:active.hole,
+   startDepth:active.startDepth,
+   endDepth:depth,
+   meters:meters,
+   pureMs:pureMs,
+   date:new Date().toISOString()
+ });
+
+ save();
+
+ active=null;
+ localStorage.removeItem(ACTIVE_KEY);
+
+ document.getElementById("depthValue").textContent="0.0";
+
+ renderActive();
+ update();
+ alert("Бурение сохранено: "+meters.toFixed(1)+" м");
+}
+
+function startTimer(){
+
+ clearInterval(window.timerInterval);
+
+ window.timerInterval=setInterval(()=>{
+
+   if(active){
+     document.getElementById("timer").textContent=
+       formatTime(getPureMs());
+   }
+
+ },1000);
+}
+
+function formatTime(ms){
+
+ let s=Math.floor(ms/1000);
+
+ let h=Math.floor(s/3600);
+ s%=3600;
+
+ let m=Math.floor(s/60);
+ s%=60;
+
+ return String(h).padStart(2,"0")+":"+
+        String(m).padStart(2,"0")+":"+
+        String(s).padStart(2,"0");
+}
+
+function renderActive(){
+
+ let status=document.getElementById("drillStatus");
+
+ if(!active){
+
+   status.textContent="Не начато";
+   status.className="status";
+
+   document.getElementById("timer").textContent="00:00:00";
+
+   return;
+ }
+
+ if(active.running){
+
+   status.textContent="● Бурение идёт";
+   status.className="status running";
+
+ }else{
+
+   status.textContent="Ⅱ Пауза";
+   status.className="status paused";
+ }
+
+ startTimer();
+}
+
+function updateQuick(){
+
+ let depth=parseFloat(document.getElementById("depthValue").textContent)||0;
+
+ if(!active){
+
+   document.getElementById("currentMeters").textContent="0.0";
+   document.getElementById("currentSpeed").textContent="0.0";
+
+   return;
+ }
+
+ let meters=Math.max(0,depth-active.startDepth);
+
+ document.getElementById("currentMeters").textContent=meters.toFixed(1);
+
+ let ms=getPureMs();
+
+ let hours=ms/3600000;
+
+ let speed=hours>0?meters/hours:0;
+
+ document.getElementById("currentSpeed").textContent=speed.toFixed(1);
+}
+
+function saveParameters(){
+
+ let depth=parseFloat(document.getElementById("depthValue").textContent)||0;
+
+ data.parameters.unshift({
+   date:new Date().toISOString(),
+   hole:document.getElementById("quickHole").value,
+   depth:depth,
+   pressure:document.getElementById("pPressure").value,
+   air:document.getElementById("pAir").value,
+   rpm:document.getElementById("pRpm").value,
+   load:document.getElementById("pLoad").value,
+   feed:document.getElementById("pFeed").value,
+   oil:document.getElementById("pOil").value
+ });
+
+ save();
+
+ alert("Параметры сохранены");
+ renderParameterHistory();
+}
+
+function saveDowntime(){
+
+ let minutes=parseFloat(document.getElementById("downtimeMinutes").value)||0;
+
+ if(minutes<=0)return;
+
+ data.downtime.unshift({
+   date:new Date().toISOString(),
+   type:document.getElementById("downtimeType").value,
+   minutes:minutes,
+   depth:parseFloat(document.getElementById("depthValue").textContent)||0
+ });
+
+ save();
+
+ document.getElementById("downtimeMinutes").value="10";
+
+ renderDowntime();
+}
+
+function saveHole(){
+
+ let number=document.getElementById("holeNumber").value;
+
+ if(!number){
+   alert("Введите номер скважины");
+   return;
+ }
+
+ data.holes.unshift({
+   id:Date.now(),
+   number:number,
+   projectDepth:document.getElementById("holeProjectDepth").value,
+   diameter:document.getElementById("holeDiameter").value,
+   bit:document.getElementById("holeBit").value,
+   x:document.getElementById("holeX").value,
+   y:document.getElementById("holeY").value,
+   z:document.getElementById("holeZ").value,
+   azimuth:document.getElementById("holeAzimuth").value,
+   note:document.getElementById("holeNote").value
+ });
+
+ save();
+
+ alert("Скважина сохранена");
+
+ renderHoles();
+}
+
+function saveTool(){
+
+ let id=document.getElementById("toolId").value;
+
+ if(!id)return;
+
+ data.tools.push({
+   id:id,
+   start:parseFloat(document.getElementById("toolStart").value)||0,
+   current:parseFloat(document.getElementById("toolStart").value)||0,
+   date:new Date().toISOString()
+ });
+
+ save();
+
+ document.getElementById("toolId").value="";
+ document.getElementById("toolStart").value="";
+
+ renderTools();
+}
+
+function newTool(){
+
+ document.getElementById("toolId").value="";
+ document.getElementById("toolStart").value="";
+}
+
+function saveShift(){
+
+ let date=document.getElementById("shiftDate").value||today();
+
+ data.shifts.unshift({
+   id:Date.now(),
+   date:date,
+   type:document.getElementById("shiftType").value,
+   operator:document.getElementById("operator").value,
+   rig:document.getElementById("rig").value,
+   site:document.getElementById("site").value,
+   meters:monthMetersFor(date.slice(0,7))
+ });
+
+ save();
+
+ alert("Смена сохранена");
+
+ renderSalary();
+}
+
+function getTotalMeters(){
+
+ return data.drillings.reduce((a,b)=>a+(Number(b.meters)||0),0);
+}
+
+function getTotalPure(){
+
+ return data.drillings.reduce((a,b)=>a+(Number(b.pureMs)||0),0);
+}
+
+function getTotalDowntime(){
+
+ return data.downtime.reduce((a,b)=>a+(Number(b.minutes)||0),0);
+}
+
+function getAverageSpeed(){
+
+ let ms=getTotalPure();
+
+ return ms>0?getTotalMeters()/(ms/3600000):0;
+}
+
+function monthDrillings(month){
+
+ return data.drillings.filter(x=>
+   (x.date||"").slice(0,7)===month
+ );
+}
+
+function monthMetersFor(month){
+
+ return monthDrillings(month)
+   .reduce((a,b)=>a+(Number(b.meters)||0),0);
+}
+
+function currentMonth(){
+
+ return new Date().toISOString().slice(0,7);
+}
+
+function saveSalarySettings(){
+
+ data.salary.base=Number(document.getElementById("salaryBase").value)||0;
+ data.salary.rate=Number(document.getElementById("meterRate").value)||0;
+ data.salary.bonus=Number(document.getElementById("bonus").value)||0;
+ data.salary.extra=Number(document.getElementById("extraPay").value)||0;
+ data.salary.deductions=Number(document.getElementById("deductions").value)||0;
+ data.salary.schedule=document.getElementById("schedule").value;
+
+ save();
+
+ renderSalary();
+
+ alert("Настройки оплаты сохранены");
+}
+
+function money(v){
+
+ return Math.round(v||0).toLocaleString("ru-RU")+" ₸";
+}
+
+function renderSalary(){
+
+ let s=data.salary||{};
+
+ document.getElementById("salaryBase").value=s.base||0;
+ document.getElementById("meterRate").value=s.rate||0;
+ document.getElementById("bonus").value=s.bonus||0;
+ document.getElementById("extraPay").value=s.extra||0;
+ document.getElementById("deductions").value=s.deductions||0;
+ document.getElementById("schedule").value=s.schedule||"15/15";
+
+ let month=currentMonth();
+
+ let meters=monthMetersFor(month);
+ let drillings=monthDrillings(month).length;
+
+ let meterMoney=meters*(Number(s.rate)||0);
+
+ /*
+   Оклад показывается как месячный оклад.
+   То есть он НЕ умножается на количество бурений.
+ */
+ let base=Number(s.base)||0;
+ let bonus=Number(s.bonus)||0;
+ let extra=Number(s.extra)||0;
+ let deductions=Number(s.deductions)||0;
+
+ let gross=meterMoney+base+bonus+extra;
+ let net=gross-deductions;
+
+ let shiftMeters=getTotalMeters();
+ let shiftMeterMoney=shiftMeters*(Number(s.rate)||0);
+
+ document.getElementById("salaryShiftMeters").textContent=
+   shiftMeters.toFixed(1)+" м";
+
+ document.getElementById("salaryShiftRate").textContent=
+   money(s.rate);
+
+ document.getElementById("salaryMetersMoney").textContent=
+   money(shiftMeterMoney);
+
+ document.getElementById("salaryShiftBase").textContent=
+   money(base);
+
+ document.getElementById("salaryBonus").textContent=
+   money(bonus);
+
+ document.getElementById("salaryExtra").textContent=
+   money(extra);
+
+ document.getElementById("salaryGross").textContent=
+   money(gross);
+
+ document.getElementById("salaryDeduction").textContent=
+   money(deductions);
+
+ document.getElementById("salaryNet").textContent=
+   money(net);
+
+ document.getElementById("monthMeters").textContent=
+   meters.toFixed(1);
+
+ document.getElementById("monthDrillings").textContent=
+   drillings;
+
+ document.getElementById("monthShifts").textContent=
+   data.shifts.filter(x=>(x.date||"").slice(0,7)===month).length;
+
+ document.getElementById("monthMeterMoney").textContent=
+   money(meterMoney);
+
+ document.getElementById("monthBase").textContent=
+   money(base);
+
+ document.getElementById("monthBonus").textContent=
+   money(bonus);
+
+ document.getElementById("monthExtra").textContent=
+   money(extra);
+
+ document.getElementById("monthGross").textContent=
+   money(gross);
+
+ document.getElementById("monthDeduction").textContent=
+   money(deductions);
+
+ document.getElementById("monthNet").textContent=
+   money(net);
+
+ document.getElementById("monthNet2").textContent=
+   money(net);
+
+ renderSalaryHistory();
+}
+
+function addSalaryHistory(){
+
+ let month=currentMonth();
+
+ let meters=monthMetersFor(month);
+ let s=data.salary;
+
+ let gross=
+   (meters*s.rate)+
+   s.base+
+   s.bonus+
+   s.extra;
+
+ let net=gross-s.deductions;
+
+ data.salaryHistory.unshift({
+   date:month,
+   meters:meters,
+   rate:s.rate,
+   base:s.base,
+   bonus:s.bonus,
+   extra:s.extra,
+   deductions:s.deductions,
+   gross:gross,
+   net:net
+ });
+
+ save();
+
+ renderSalaryHistory();
+}
+
+function renderSalaryHistory(){
+
+ let el=document.getElementById("salaryHistory");
+
+ if(!data.salaryHistory.length){
+   el.innerHTML="<p>История выплат пока пустая.</p>";
+   return;
+ }
+
+ el.innerHTML=data.salaryHistory.map((x,i)=>`
+ <div class="record">
+   <strong>${x.date}</strong><br>
+   <span class="badge">${Number(x.meters).toFixed(1)} м × ${money(x.rate)}</span>
+   <p>
+   Оклад: ${money(x.base)}<br>
+   Премия: ${money(x.bonus)}<br>
+   Доплаты: ${money(x.extra)}<br>
+   Удержания: ${money(x.deductions)}
+   </p>
+   <strong>На руки: ${money(x.net)}</strong>
+   <br><br>
+   <button class="btn-red" onclick="deleteSalaryHistory(${i})">Удалить</button>
+ </div>
+ `).join("");
+}
+
+function deleteSalaryHistory(i){
+
+ if(!confirm("Удалить запись?"))return;
+
+ data.salaryHistory.splice(i,1);
+ save();
+ renderSalaryHistory();
+}
+
+function renderHistory(){
+
+ let el=document.getElementById("historyList");
+
+ if(!data.drillings.length){
+   el.innerHTML="<p>История пока пустая.</p>";
+ }else{
+
+   el.innerHTML=data.drillings.map((x,i)=>`
+
+   <div class="record">
+   <strong>Скважина ${esc(x.hole)}</strong>
+   <br>
+   Бурение №${esc(x.number)}
+   <br><br>
+   ${Number(x.startDepth).toFixed(1)} → ${Number(x.endDepth).toFixed(1)} м
+   <br>
+   <b>${Number(x.meters).toFixed(1)} м</b>
+   <br>
+   Время: ${formatTime(x.pureMs||0)}
+   <br>
+   <small>${new Date(x.date).toLocaleString("ru-RU")}</small>
+   <br><br>
+   <button class="btn-red" onclick="deleteDrilling(${i})">Удалить</button>
+   </div>
+
+   `).join("");
+ }
+
+ document.getElementById("statMeters").textContent=
+   getTotalMeters().toFixed(1);
+
+ document.getElementById("statDrillings").textContent=
+   data.drillings.length;
+
+ document.getElementById("statSpeed").textContent=
+   getAverageSpeed().toFixed(1)+" м/ч";
+
+ document.getElementById("statDowntime").textContent=
+   getTotalDowntime();
+
+ renderParameterHistory();
+}
+
+function renderParameterHistory(){
+
+ let el=document.getElementById("parameterHistory");
+
+ if(!data.parameters.length){
+   el.innerHTML="<p>Параметров пока нет.</p>";
+   return;
+ }
+
+ el.innerHTML=data.parameters.slice(0,30).map(x=>`
+
+ <div class="record">
+ <b>${esc(x.hole||"Без скважины")}</b>
+ <br>
+ Глубина: ${x.depth} м
+ <br>
+ Давление: ${x.pressure||"-"} бар
+ <br>
+ Воздух: ${x.air||"-"}
+ <br>
+ RPM: ${x.rpm||"-"}
+ <br>
+ Нагрузка: ${x.load||"-"}
+ <br>
+ Подача: ${x.feed||"-"}
+ <br>
+ Масло: ${x.oil||"-"}
+ <br>
+ <small>${new Date(x.date).toLocaleString("ru-RU")}</small>
+ </div>
+
+ `).join("");
+}
+
+function renderDowntime(){
+
+ let el=document.getElementById("downtimeTotal");
+
+ let total=getTotalDowntime();
+
+ el.innerHTML=`
+ <div class="status">
+ Общий простой: <b>${total} мин</b>
+ </div>
+ `;
+}
+
+function renderHoles(){
+
+ let el=document.getElementById("holesList");
+
+ if(!data.holes.length){
+   el.innerHTML="<p>Скважин пока нет.</p>";
+   return;
+ }
+
+ el.innerHTML=data.holes.map((x,i)=>`
+
+ <div class="record">
+ <strong>Скважина ${esc(x.number)}</strong>
+ <br>
+ Проект: ${x.projectDepth||"-"} м
+ <br>
+ Диаметр: ${x.diameter||"-"}
+ <br>
+ Долото: ${x.bit||"-"}
+ <br>
+ X/Y/Z: ${x.x||"-"} / ${x.y||"-"} / ${x.z||"-"}
+ <br>
+ Азимут: ${x.azimuth||"-"}
+ <br>
+ ${esc(x.note||"")}
+ <br><br>
+ <button class="btn-red" onclick="deleteHole(${i})">Удалить</button>
+ </div>
+
+ `).join("");
+}
+
+function renderTools(){
+
+ let el=document.getElementById("toolsList");
+
+ if(!data.tools.length){
+   el.innerHTML="<p>Инструмент не добавлен.</p>";
+   return;
+ }
+
+ el.innerHTML=data.tools.map((x,i)=>`
+
+ <div class="record">
+ <strong>${esc(x.id)}</strong>
+ <br>
+ Начало: ${x.start} м
+ <br>
+ Текущий: ${x.current} м
+ <br>
+ Выработка: ${(x.current-x.start).toFixed(1)} м
+ <br><br>
+ <button class="btn-red" onclick="deleteTool(${i})">Удалить</button>
+ </div>
+
+ `).join("");
+}
+
+function deleteDrilling(i){
+
+ if(!confirm("Удалить бурение?"))return;
+
+ data.drillings.splice(i,1);
+ save();
+ update();
+}
+
+function deleteHole(i){
+
+ if(!confirm("Удалить скважину?"))return;
+
+ data.holes.splice(i,1);
+ save();
+ renderHoles();
+}
+
+function deleteTool(i){
+
+ if(!confirm("Удалить инструмент?"))return;
+
+ data.tools.splice(i,1);
+ save();
+ renderTools();
+}
+
+function today(){
+
+ return new Date().toISOString().slice(0,10);
+}
+
+function renderReport(){
+
+ document.getElementById("shiftDate").value ||= today();
+
+}
+
+function backupData(){
+
+ let blob=new Blob(
+   [JSON.stringify(data,null,2)],
+   {type:"application/json"}
+ );
+
+ downloadBlob(blob,"rc-driller-backup.json");
+}
+
+function downloadBlob(blob,name){
+
+ let a=document.createElement("a");
+
+ a.href=URL.createObjectURL(blob);
+ a.download=name;
+
+ document.body.appendChild(a);
+ a.click();
+
+ a.remove();
+
+ setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+}
+
+function exportCSV(){
+
+ let rows=[
+ ["Дата","Скважина","Бурение","Начало","Конец","Метры","Время"]
+ ];
+
+ data.drillings.forEach(x=>{
+   rows.push([
+     x.date,
+     x.hole,
+     x.number,
+     x.startDepth,
+     x.endDepth,
+     x.meters,
+     formatTime(x.pureMs||0)
+   ]);
+ });
+
+ let csv=rows.map(r=>
+   r.map(v=>`"${String(v).replaceAll('"','""')}"`).join(";")
+ ).join("\n");
+
+ downloadBlob(
+   new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8"}),
+   "rc-driller.csv"
+ );
+}
+
+async function shareReport(){
+
+ let text=
+ `RC Driller — отчёт\n`+
+ `Дата: ${document.getElementById("shiftDate").value}\n`+
+ `Оператор: ${document.getElementById("operator").value}\n`+
+ `Буровая: ${document.getElementById("rig").value}\n`+
+ `Объект: ${document.getElementById("site").value}\n\n`+
+ `Всего метров: ${getTotalMeters().toFixed(1)} м\n`+
+ `Бурений: ${data.drillings.length}\n`+
+ `Простой: ${getTotalDowntime()} мин\n`+
+ `Средняя скорость: ${getAverageSpeed().toFixed(1)} м/ч\n\n`+
+ `Заработок за месяц: ${document.getElementById("monthNet").textContent}`;
+
+ if(navigator.share){
+
+   try{
+     await navigator.share({
+       title:"RC Driller — отчёт",
+       text:text
+     });
+   }catch(e){}
+
+ }else{
+
+   await navigator.clipboard.writeText(text);
+
+   alert("Отчёт скопирован");
+ }
+}
+
+function clearData(){
+
+ if(!confirm("ВНИМАНИЕ! Удалить все данные?"))return;
+
+ if(!confirm("Точно удалить ВСЁ?"))return;
+
+ localStorage.removeItem(KEY);
+ localStorage.removeItem(ACTIVE_KEY);
+
+ location.reload();
+}
+
+function esc(v){
+
+ return String(v??"")
+ .replaceAll("&","&amp;")
+ .replaceAll("<","&lt;")
+ .replaceAll(">","&gt;")
+ .replaceAll('"',"&quot;");
+}
+
+function update(){
+
+ updateQuick();
+ renderActive();
+ renderHistory();
+ renderDowntime();
+ renderHoles();
+ renderTools();
+ renderReport();
+ renderSalary();
+}
+
+document.addEventListener("DOMContentLoaded",()=>{
+
+ document.getElementById("shiftDate").value=today();
+
+ update();
+
+ if(active){
+   document.getElementById("quickHole").value=active.hole||"";
+   document.getElementById("quickNumber").value=active.number||1;
+   document.getElementById("depthValue").textContent=
+     Number(active.endDepth||active.startDepth||0).toFixed(1);
+   startTimer();
+ }
+
+});
+
+</script>
+
+</body>
+</html>
