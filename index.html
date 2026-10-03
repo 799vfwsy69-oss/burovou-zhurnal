@@ -1,0 +1,2357 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111827">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="RC Driller 6">
+<title>RC Driller 6.0</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
+
+body{
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  background:#f1f5f9;
+  color:#0f172a;
+  padding-bottom:90px;
+}
+
+header{
+  position:sticky;
+  top:0;
+  z-index:20;
+  background:#111827;
+  color:white;
+  padding:15px 16px;
+  padding-top:max(15px,env(safe-area-inset-top));
+  box-shadow:0 2px 10px rgba(0,0,0,.18);
+}
+
+.header-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.logo{
+  font-size:20px;
+  font-weight:800;
+}
+
+.version{
+  font-size:12px;
+  opacity:.7;
+}
+
+.container{
+  max-width:700px;
+  margin:auto;
+  padding:12px;
+}
+
+.page{
+  display:none;
+}
+
+.page.active{
+  display:block;
+}
+
+.card{
+  background:white;
+  border-radius:16px;
+  padding:15px;
+  margin-bottom:12px;
+  box-shadow:0 2px 8px rgba(15,23,42,.07);
+}
+
+.card h2{
+  margin:0 0 13px;
+  font-size:18px;
+}
+
+.card h3{
+  margin:15px 0 8px;
+  font-size:15px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.field{
+  margin-bottom:10px;
+}
+
+.field label{
+  display:block;
+  font-size:13px;
+  color:#64748b;
+  margin-bottom:5px;
+}
+
+input,select,textarea{
+  width:100%;
+  border:1px solid #cbd5e1;
+  border-radius:11px;
+  padding:12px;
+  font-size:16px;
+  background:white;
+  color:#0f172a;
+}
+
+textarea{
+  min-height:80px;
+  resize:vertical;
+}
+
+button{
+  border:0;
+  border-radius:12px;
+  padding:13px 14px;
+  font-size:15px;
+  font-weight:700;
+  cursor:pointer;
+}
+
+button:active{
+  transform:scale(.98);
+}
+
+.btn{
+  background:#2563eb;
+  color:white;
+}
+
+.btn-dark{
+  background:#111827;
+  color:white;
+}
+
+.btn-green{
+  background:#16a34a;
+  color:white;
+}
+
+.btn-orange{
+  background:#ea580c;
+  color:white;
+}
+
+.btn-red{
+  background:#dc2626;
+  color:white;
+}
+
+.btn-gray{
+  background:#e2e8f0;
+  color:#0f172a;
+}
+
+.btn-big{
+  width:100%;
+  min-height:54px;
+  font-size:17px;
+}
+
+.btn-row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+
+.btn-row-3{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:7px;
+}
+
+.depth-display{
+  text-align:center;
+  background:#0f172a;
+  color:white;
+  border-radius:18px;
+  padding:18px 10px;
+  margin-bottom:10px;
+}
+
+.depth-label{
+  font-size:13px;
+  opacity:.7;
+}
+
+.depth-value{
+  font-size:55px;
+  line-height:1.1;
+  font-weight:800;
+}
+
+.depth-unit{
+  font-size:17px;
+  opacity:.8;
+}
+
+.depth-buttons{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:7px;
+}
+
+.depth-buttons button{
+  min-height:52px;
+  font-size:15px;
+  background:#e2e8f0;
+}
+
+.depth-buttons button.plus{
+  background:#dbeafe;
+}
+
+.depth-buttons button.minus{
+  background:#fee2e2;
+}
+
+.status{
+  padding:10px;
+  border-radius:10px;
+  font-size:14px;
+  margin-bottom:10px;
+}
+
+.status-green{
+  background:#dcfce7;
+  color:#166534;
+}
+
+.status-orange{
+  background:#ffedd5;
+  color:#9a3412;
+}
+
+.status-gray{
+  background:#f1f5f9;
+  color:#475569;
+}
+
+.timer{
+  text-align:center;
+  font-size:38px;
+  font-weight:800;
+  margin:10px 0;
+  font-variant-numeric:tabular-nums;
+}
+
+.stat-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:8px;
+}
+
+.stat{
+  background:#f8fafc;
+  border-radius:12px;
+  padding:12px;
+  text-align:center;
+}
+
+.stat-value{
+  font-size:24px;
+  font-weight:800;
+}
+
+.stat-label{
+  font-size:12px;
+  color:#64748b;
+  margin-top:3px;
+}
+
+.record{
+  border:1px solid #e2e8f0;
+  border-radius:12px;
+  padding:12px;
+  margin-bottom:8px;
+  background:#fff;
+}
+
+.record-title{
+  font-weight:800;
+  margin-bottom:6px;
+}
+
+.record-small{
+  font-size:13px;
+  color:#64748b;
+  line-height:1.5;
+}
+
+.badge{
+  display:inline-block;
+  padding:4px 8px;
+  border-radius:999px;
+  background:#e2e8f0;
+  font-size:12px;
+  margin-right:4px;
+}
+
+.photo-preview{
+  width:100%;
+  max-height:260px;
+  object-fit:cover;
+  border-radius:12px;
+  margin-top:8px;
+}
+
+.bottom-nav{
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  z-index:30;
+  background:white;
+  border-top:1px solid #cbd5e1;
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  padding-bottom:max(5px,env(safe-area-inset-bottom));
+}
+
+.nav-btn{
+  background:white;
+  color:#64748b;
+  border-radius:0;
+  padding:9px 3px;
+  font-size:11px;
+}
+
+.nav-btn.active{
+  color:#2563eb;
+  font-weight:800;
+}
+
+.nav-icon{
+  display:block;
+  font-size:21px;
+  margin-bottom:2px;
+}
+
+.empty{
+  text-align:center;
+  color:#64748b;
+  padding:25px 10px;
+}
+
+.danger-zone{
+  border:1px solid #fecaca;
+  background:#fff7f7;
+}
+
+.hidden{
+  display:none!important;
+}
+
+.kpi{
+  display:flex;
+  justify-content:space-between;
+  padding:9px 0;
+  border-bottom:1px solid #f1f5f9;
+}
+
+.kpi:last-child{
+  border-bottom:0;
+}
+
+.kpi strong{
+  font-size:16px;
+}
+
+hr{
+  border:0;
+  border-top:1px solid #e2e8f0;
+  margin:14px 0;
+}
+
+@media(max-width:380px){
+  .grid{
+    grid-template-columns:1fr;
+  }
+
+  .depth-value{
+    font-size:47px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="header-row">
+    <div class="logo">⛏️ RC Driller</div>
+    <div class="version">6.0 OFFLINE</div>
+  </div>
+</header>
+
+<div class="container">
+
+<!-- ================= БУРЕНИЕ ================= -->
+
+<section id="page-drilling" class="page active">
+
+  <div class="card">
+    <h2>⛏️ Текущее бурение</h2>
+
+    <div id="drillingStatus" class="status status-gray">
+      Бурение не запущено
+    </div>
+
+    <div class="depth-display">
+      <div class="depth-label">ТЕКУЩАЯ ГЛУБИНА</div>
+      <div id="currentDepthDisplay" class="depth-value">0.00</div>
+      <div class="depth-unit">метров</div>
+    </div>
+
+    <div class="depth-buttons">
+      <button class="minus" onclick="changeDepth(-1)">−1 м</button>
+      <button class="minus" onclick="changeDepth(-0.5)">−0.5 м</button>
+      <button class="minus" onclick="changeDepth(-0.1)">−0.1 м</button>
+
+      <button class="plus" onclick="changeDepth(0.1)">+0.1 м</button>
+      <button class="plus" onclick="changeDepth(0.5)">+0.5 м</button>
+      <button class="plus" onclick="changeDepth(1)">+1 м</button>
+    </div>
+
+    <div class="field" style="margin-top:10px">
+      <label>Указать глубину вручную</label>
+      <div class="btn-row">
+        <input id="manualDepth" type="number" step="0.01" placeholder="Например 127.50">
+        <button class="btn" onclick="setManualDepth()">Установить</button>
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="stat-grid">
+      <div class="stat">
+        <div id="drillingMeters" class="stat-value">0.00</div>
+        <div class="stat-label">метров</div>
+      </div>
+
+      <div class="stat">
+        <div id="speedNow" class="stat-value">0.0</div>
+        <div class="stat-label">м/ч</div>
+      </div>
+
+      <div class="stat">
+        <div id="pureTime" class="stat-value">00:00</div>
+        <div class="stat-label">чистое время</div>
+      </div>
+
+      <div class="stat">
+        <div id="drillingNumberView" class="stat-value">—</div>
+        <div class="stat-label">бурение №</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>▶️ Управление</h2>
+
+    <div class="btn-row">
+      <button id="startBtn" class="btn-green btn-big" onclick="startDrilling()">
+        ▶ Начать
+      </button>
+
+      <button id="pauseBtn" class="btn-orange btn-big" onclick="togglePause()">
+        ⏸ Пауза
+      </button>
+    </div>
+
+    <button class="btn-red btn-big" style="margin-top:8px" onclick="finishDrilling()">
+      ⏹ Завершить бурение
+    </button>
+  </div>
+
+  <div class="card">
+    <h2>⚙️ Параметры RC</h2>
+
+    <div class="grid">
+
+      <div class="field">
+        <label>Давление воздуха, бар</label>
+        <input id="rcPressure" type="number" step="0.1">
+      </div>
+
+      <div class="field">
+        <label>Расход воздуха</label>
+        <input id="rcAir" type="number" step="1">
+      </div>
+
+      <div class="field">
+        <label>Обороты, об/мин</label>
+        <input id="rcRpm" type="number">
+      </div>
+
+      <div class="field">
+        <label>Нагрузка</label>
+        <input id="rcLoad" type="number" step="0.1">
+      </div>
+
+      <div class="field">
+        <label>Давление подачи</label>
+        <input id="rcFeed" type="number" step="0.1">
+      </div>
+
+      <div class="field">
+        <label>Давление масла</label>
+        <input id="rcOil" type="number" step="0.1">
+      </div>
+
+    </div>
+
+    <div class="field">
+      <label>Примечание</label>
+      <textarea id="rcNote" placeholder="Например: твёрдая порода, изменил обороты..."></textarea>
+    </div>
+
+    <button class="btn btn-big" onclick="saveParameters()">
+      💾 Сохранить параметры
+    </button>
+  </div>
+
+</section>
+
+
+<!-- ================= СКВАЖИНА ================= -->
+
+<section id="page-hole" class="page">
+
+  <div class="card">
+    <h2>📋 Паспорт скважины</h2>
+
+    <div class="grid">
+
+      <div class="field">
+        <label>Номер скважины</label>
+        <input id="holeNumber" placeholder="№ скважины">
+      </div>
+
+      <div class="field">
+        <label>Проектная глубина</label>
+        <input id="projectDepth" type="number" step="0.01">
+      </div>
+
+      <div class="field">
+        <label>Диаметр, мм</label>
+        <input id="holeDiameter" type="number">
+      </div>
+
+      <div class="field">
+        <label>Тип коронки</label>
+        <input id="bitType" placeholder="Тип / модель">
+      </div>
+
+    </div>
+
+    <div class="grid">
+
+      <div class="field">
+        <label>Координата X</label>
+        <input id="coordX" placeholder="X">
+      </div>
+
+      <div class="field">
+        <label>Координата Y</label>
+        <input id="coordY" placeholder="Y">
+      </div>
+
+      <div class="field">
+        <label>Координата Z</label>
+        <input id="coordZ" placeholder="Z">
+      </div>
+
+      <div class="field">
+        <label>Азимут</label>
+        <input id="azimuth" type="number" step="0.1">
+      </div>
+
+    </div>
+
+    <div class="field">
+      <label>Примечание по скважине</label>
+      <textarea id="holeNote" placeholder="Геология, состояние скважины и т.д."></textarea>
+    </div>
+
+    <button class="btn btn-big" onclick="saveHole()">
+      💾 Сохранить паспорт
+    </button>
+  </div>
+
+  <div class="card">
+    <h2>📷 Фото скважины</h2>
+
+    <div class="field">
+      <label>Добавить фотографию</label>
+      <input id="holePhoto" type="file" accept="image/*" capture="environment">
+    </div>
+
+    <div id="photoPreview"></div>
+
+    <button class="btn btn-big" onclick="savePhoto()">
+      📷 Сохранить фото
+    </button>
+  </div>
+
+  <div class="card">
+    <h2>📌 Текущая скважина</h2>
+    <div id="holeInfo">
+      <div class="empty">Паспорт пока не заполнен</div>
+    </div>
+  </div>
+
+</section>
+
+
+<!-- ================= ИНСТРУМЕНТ ================= -->
+
+<section id="page-tool" class="page">
+
+  <div class="card">
+    <h2>🔧 Инструмент</h2>
+
+    <div class="field">
+      <label>Номер / ID коронки</label>
+      <input id="toolId" placeholder="Например RC-001">
+    </div>
+
+    <div class="grid">
+
+      <div class="field">
+        <label>Начальный метраж</label>
+        <input id="toolStart" type="number" step="0.01">
+      </div>
+
+      <div class="field">
+        <label>Конечный метраж</label>
+        <input id="toolEnd" type="number" step="0.01">
+      </div>
+
+    </div>
+
+    <button class="btn btn-big" onclick="saveTool()">
+      💾 Сохранить инструмент
+    </button>
+  </div>
+
+  <div class="card">
+    <h2>📊 Текущий инструмент</h2>
+    <div id="toolInfo">
+      <div class="empty">Инструмент не указан</div>
+    </div>
+  </div>
+
+</section>
+
+
+<!-- ================= ИСТОРИЯ ================= -->
+
+<section id="page-history" class="page">
+
+  <div class="card">
+    <h2>📚 История бурения</h2>
+
+    <div class="stat-grid">
+      <div class="stat">
+        <div id="totalMeters" class="stat-value">0</div>
+        <div class="stat-label">метров</div>
+      </div>
+
+      <div class="stat">
+        <div id="totalDrillings" class="stat-value">0</div>
+        <div class="stat-label">бурений</div>
+      </div>
+
+      <div class="stat">
+        <div id="totalPureTime" class="stat-value">0</div>
+        <div class="stat-label">минут</div>
+      </div>
+
+      <div class="stat">
+        <div id="totalDowntime" class="stat-value">0</div>
+        <div class="stat-label">простой, мин</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>⛏️ Бурения</h2>
+    <div id="historyList"></div>
+  </div>
+
+  <div class="card">
+    <h2>🚧 Простой</h2>
+
+    <div class="field">
+      <label>Причина</label>
+      <select id="downtimeReason">
+        <option>Ремонт</option>
+        <option>Замена инструмента</option>
+        <option>Компрессор</option>
+        <option>Ожидание машины</option>
+        <option>Ожидание воды</option>
+        <option>Геология</option>
+        <option>Погода</option>
+        <option>Техническое обслуживание</option>
+        <option>Другое</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Время простоя, минут</label>
+      <input id="downtimeMinutes" type="number" min="1">
+    </div>
+
+    <div class="field">
+      <label>Комментарий</label>
+      <textarea id="downtimeNote"></textarea>
+    </div>
+
+    <button class="btn-orange btn-big" onclick="saveDowntime()">
+      🚧 Добавить простой
+    </button>
+  </div>
+
+</section>
+
+
+<!-- ================= ОТЧЁТ ================= -->
+
+<section id="page-report" class="page">
+
+  <div class="card">
+    <h2>📑 Сменный отчёт</h2>
+
+    <div class="grid">
+
+      <div class="field">
+        <label>Дата</label>
+        <input id="reportDate" type="date">
+      </div>
+
+      <div class="field">
+        <label>Смена</label>
+        <select id="shiftType">
+          <option>Дневная</option>
+          <option>Ночная</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Оператор</label>
+        <input id="operator" placeholder="ФИО">
+      </div>
+
+      <div class="field">
+        <label>Буровая</label>
+        <input id="rig" placeholder="№ / модель">
+      </div>
+
+      <div class="field">
+        <label>Участок</label>
+        <input id="site" placeholder="Участок">
+      </div>
+
+    </div>
+
+    <button class="btn btn-big" onclick="saveShift()">
+      💾 Сохранить данные смены
+    </button>
+  </div>
+
+  <div class="card">
+    <h2>📊 Итоги</h2>
+
+    <div class="kpi">
+      <span>Метраж</span>
+      <strong id="reportMeters">0 м</strong>
+    </div>
+
+    <div class="kpi">
+      <span>Бурений</span>
+      <strong id="reportDrillings">0</strong>
+    </div>
+
+    <div class="kpi">
+      <span>Чистое время</span>
+      <strong id="reportPure">0 мин</strong>
+    </div>
+
+    <div class="kpi">
+      <span>Простой</span>
+      <strong id="reportDown">0 мин</strong>
+    </div>
+
+    <div class="kpi">
+      <span>Средняя скорость</span>
+      <strong id="reportSpeed">0 м/ч</strong>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📤 Экспорт</h2>
+
+    <div class="btn-row">
+      <button class="btn" onclick="shareReport()">📤 Поделиться</button>
+      <button class="btn-green" onclick="exportCSV()">📊 CSV</button>
+    </div>
+
+    <button class="btn-dark btn-big" style="margin-top:8px" onclick="backupData()">
+      💾 Резервная копия
+    </button>
+
+    <input id="restoreFile" class="hidden" type="file" accept=".json" onchange="restoreData(event)">
+
+    <button class="btn-gray btn-big" style="margin-top:8px" onclick="document.getElementById('restoreFile').click()">
+      ♻️ Восстановить данные
+    </button>
+  </div>
+
+  <div class="card danger-zone">
+    <h2>⚠️ Данные</h2>
+
+    <p style="font-size:13px;color:#64748b">
+      Очистка удалит данные, сохранённые на этом телефоне.
+      Перед очисткой рекомендуется сделать резервную копию.
+    </p>
+
+    <button class="btn-red btn-big" onclick="clearAllData()">
+      🗑 Очистить всё
+    </button>
+  </div>
+
+</section>
+
+</div>
+
+
+<!-- ================= НАВИГАЦИЯ ================= -->
+
+<nav class="bottom-nav">
+
+  <button class="nav-btn active" onclick="showPage('drilling',this)">
+    <span class="nav-icon">⛏️</span>
+    Бурение
+  </button>
+
+  <button class="nav-btn" onclick="showPage('hole',this)">
+    <span class="nav-icon">📋</span>
+    Скважина
+  </button>
+
+  <button class="nav-btn" onclick="showPage('tool',this)">
+    <span class="nav-icon">🔧</span>
+    Инструмент
+  </button>
+
+  <button class="nav-btn" onclick="showPage('history',this)">
+    <span class="nav-icon">📚</span>
+    История
+  </button>
+
+  <button class="nav-btn" onclick="showPage('report',this)">
+    <span class="nav-icon">📊</span>
+    Отчёт
+  </button>
+
+</nav>
+
+
+<script>
+
+/* =========================================================
+   RC DRILLER 6.0
+   OFFLINE DATA
+========================================================= */
+
+const STORAGE_KEY = "rcDriller6";
+
+let data = {
+  shift:{
+    date:"",
+    operator:"",
+    rig:"",
+    site:"",
+    shiftType:"Дневная"
+  },
+
+  hole:{
+    number:"",
+    projectDepth:0,
+    diameter:"",
+    bitType:"",
+    x:"",
+    y:"",
+    z:"",
+    azimuth:"",
+    note:"",
+    photo:""
+  },
+
+  tool:{
+    id:"",
+    start:0,
+    end:0
+  },
+
+  drillings:[],
+  downtime:[],
+  parameters:[]
+};
+
+let activeDrilling = null;
+let timerInterval = null;
+
+
+/* =========================================================
+   STORAGE
+========================================================= */
+
+function saveData(){
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(data));
+}
+
+function loadData(){
+
+  const saved = localStorage.getItem(STORAGE_KEY);
+
+  if(saved){
+
+    try{
+      data = JSON.parse(saved);
+    }catch(e){
+      console.log("Ошибка данных");
+    }
+
+  }
+
+  if(!data.shift) data.shift={};
+  if(!data.hole) data.hole={};
+  if(!data.tool) data.tool={};
+  if(!Array.isArray(data.drillings)) data.drillings=[];
+  if(!Array.isArray(data.downtime)) data.downtime=[];
+  if(!Array.isArray(data.parameters)) data.parameters=[];
+
+  loadActiveDrilling();
+  fillForms();
+  updateAll();
+}
+
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+function showPage(name,button){
+
+  document.querySelectorAll(".page").forEach(p=>{
+    p.classList.remove("active");
+  });
+
+  const page=document.getElementById("page-"+name);
+
+  if(page) page.classList.add("active");
+
+  document.querySelectorAll(".nav-btn").forEach(b=>{
+    b.classList.remove("active");
+  });
+
+  if(button) button.classList.add("active");
+
+  updateAll();
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+}
+
+
+/* =========================================================
+   SHIFT
+========================================================= */
+
+function saveShift(){
+
+  data.shift.date=document.getElementById("reportDate").value;
+  data.shift.operator=document.getElementById("operator").value;
+  data.shift.rig=document.getElementById("rig").value;
+  data.shift.site=document.getElementById("site").value;
+  data.shift.shiftType=document.getElementById("shiftType").value;
+
+  saveData();
+
+  alert("Данные смены сохранены");
+}
+
+
+/* =========================================================
+   HOLE
+========================================================= */
+
+function saveHole(){
+
+  data.hole.number=document.getElementById("holeNumber").value;
+  data.hole.projectDepth=parseFloat(document.getElementById("projectDepth").value)||0;
+  data.hole.diameter=document.getElementById("holeDiameter").value;
+  data.hole.bitType=document.getElementById("bitType").value;
+  data.hole.x=document.getElementById("coordX").value;
+  data.hole.y=document.getElementById("coordY").value;
+  data.hole.z=document.getElementById("coordZ").value;
+  data.hole.azimuth=document.getElementById("azimuth").value;
+  data.hole.note=document.getElementById("holeNote").value;
+
+  saveData();
+
+  updateHoleInfo();
+
+  alert("Паспорт скважины сохранён");
+}
+
+
+/* =========================================================
+   PHOTO
+========================================================= */
+
+function savePhoto(){
+
+  const input=document.getElementById("holePhoto");
+
+  if(!input.files || !input.files[0]){
+    alert("Сначала выбери фотографию");
+    return;
+  }
+
+  const file=input.files[0];
+
+  const reader=new FileReader();
+
+  reader.onload=function(){
+
+    data.hole.photo=reader.result;
+
+    saveData();
+
+    updatePhoto();
+
+    alert("Фото сохранено");
+  };
+
+  reader.readAsDataURL(file);
+}
+
+
+function updatePhoto(){
+
+  const box=document.getElementById("photoPreview");
+
+  if(data.hole.photo){
+
+    box.innerHTML=`
+      <img class="photo-preview" src="${data.hole.photo}">
+    `;
+
+  }else{
+
+    box.innerHTML="";
+
+  }
+}
+
+
+/* =========================================================
+   TOOL
+========================================================= */
+
+function saveTool(){
+
+  data.tool.id=document.getElementById("toolId").value;
+  data.tool.start=parseFloat(document.getElementById("toolStart").value)||0;
+  data.tool.end=parseFloat(document.getElementById("toolEnd").value)||0;
+
+  saveData();
+
+  updateToolInfo();
+
+  alert("Инструмент сохранён");
+}
+
+
+/* =========================================================
+   DEPTH
+========================================================= */
+
+function getCurrentDepth(){
+
+  if(activeDrilling){
+    return activeDrilling.currentDepth;
+  }
+
+  if(data.drillings.length){
+
+    return data.drillings[data.drillings.length-1].endDepth||0;
+
+  }
+
+  return 0;
+}
+
+
+function updateDepthDisplay(){
+
+  const depth=getCurrentDepth();
+
+  document.getElementById("currentDepthDisplay").textContent=
+    depth.toFixed(2);
+
+  if(activeDrilling){
+
+    const meters=
+      activeDrilling.currentDepth-
+      activeDrilling.startDepth;
+
+    document.getElementById("drillingMeters").textContent=
+      Math.max(0,meters).toFixed(2);
+
+  }else{
+
+    document.getElementById("drillingMeters").textContent="0.00";
+
+  }
+}
+
+
+function changeDepth(amount){
+
+  if(!activeDrilling){
+
+    alert("Сначала начни бурение");
+
+    return;
+  }
+
+  activeDrilling.currentDepth=
+    Math.max(
+      activeDrilling.startDepth,
+      activeDrilling.currentDepth+amount
+    );
+
+  saveActiveDrilling();
+  updateAll();
+}
+
+
+function setManualDepth(){
+
+  if(!activeDrilling){
+
+    alert("Сначала начни бурение");
+
+    return;
+  }
+
+  const value=
+    parseFloat(document.getElementById("manualDepth").value);
+
+  if(isNaN(value)){
+
+    alert("Введите глубину");
+
+    return;
+  }
+
+  if(value<activeDrilling.startDepth){
+
+    alert("Глубина не может быть меньше начальной");
+
+    return;
+  }
+
+  activeDrilling.currentDepth=value;
+
+  saveActiveDrilling();
+
+  updateAll();
+}
+
+
+/* =========================================================
+   DRILLING TIMER
+========================================================= */
+
+function startDrilling(){
+
+  if(activeDrilling){
+
+    alert("Бурение уже запущено");
+
+    return;
+  }
+
+  let startDepth=getCurrentDepth();
+
+  activeDrilling={
+    id:Date.now(),
+
+    number:data.drillings.length+1,
+
+    hole:data.hole.number||"—",
+
+    startDepth:startDepth,
+
+    currentDepth:startDepth,
+
+    startTime:Date.now(),
+
+    accumulatedMs:0,
+
+    lastResumeTime:Date.now(),
+
+    paused:false,
+
+    pauseStart:null
+  };
+
+  saveActiveDrilling();
+
+  startTimer();
+
+  updateAll();
+}
+
+
+function togglePause(){
+
+  if(!activeDrilling){
+
+    alert("Бурение не запущено");
+
+    return;
+  }
+
+  if(activeDrilling.paused){
+
+    const pauseMs=
+      Date.now()-activeDrilling.pauseStart;
+
+    activeDrilling.accumulatedMs+=pauseMs;
+
+    activeDrilling.lastResumeTime=Date.now();
+
+    activeDrilling.paused=false;
+
+    activeDrilling.pauseStart=null;
+
+  }else{
+
+    activeDrilling.paused=true;
+
+    activeDrilling.pauseStart=Date.now();
+
+  }
+
+  saveActiveDrilling();
+
+  updateAll();
+}
+
+
+function getPureMs(){
+
+  if(!activeDrilling) return 0;
+
+  if(activeDrilling.paused){
+
+    return activeDrilling.accumulatedMs;
+
+  }
+
+  return activeDrilling.accumulatedMs+
+    (Date.now()-activeDrilling.lastResumeTime);
+}
+
+
+function formatTime(ms){
+
+  let total=Math.floor(ms/1000);
+
+  let hours=Math.floor(total/3600);
+
+  total%=3600;
+
+  let minutes=Math.floor(total/60);
+
+  let seconds=total%60;
+
+  return String(hours).padStart(2,"0")+":"+
+         String(minutes).padStart(2,"0")+":"+
+         String(seconds).padStart(2,"0");
+}
+
+
+function formatMinutes(ms){
+
+  return Math.floor(ms/60000);
+}
+
+
+function startTimer(){
+
+  if(timerInterval) clearInterval(timerInterval);
+
+  timerInterval=setInterval(()=>{
+
+    updateTimer();
+
+  },1000);
+}
+
+
+function updateTimer(){
+
+  if(!activeDrilling) return;
+
+  document.getElementById("pureTime").textContent=
+    formatTime(getPureMs());
+
+  updateSpeed();
+}
+
+
+function updateSpeed(){
+
+  if(!activeDrilling) return;
+
+  const meters=
+    Math.max(
+      0,
+      activeDrilling.currentDepth-
+      activeDrilling.startDepth
+    );
+
+  const ms=getPureMs();
+
+  if(ms<=0){
+
+    document.getElementById("speedNow").textContent="0.0";
+
+    return;
+  }
+
+  const hours=ms/3600000;
+
+  const speed=meters/hours;
+
+  document.getElementById("speedNow").textContent=
+    speed.toFixed(1);
+}
+
+
+function finishDrilling(){
+
+  if(!activeDrilling){
+
+    alert("Нет активного бурения");
+
+    return;
+  }
+
+  const meters=
+    Math.max(
+      0,
+      activeDrilling.currentDepth-
+      activeDrilling.startDepth
+    );
+
+  const pureMs=getPureMs();
+
+  if(meters<=0){
+
+    if(!confirm("Метраж равен 0 м. Всё равно завершить бурение?")){
+      return;
+    }
+
+  }
+
+  const record={
+
+    id:activeDrilling.id,
+
+    date:new Date().toISOString(),
+
+    hole:activeDrilling.hole,
+
+    number:activeDrilling.number,
+
+    startDepth:activeDrilling.startDepth,
+
+    endDepth:activeDrilling.currentDepth,
+
+    meters:meters,
+
+    pureMs:pureMs
+  };
+
+  data.drillings.push(record);
+
+  activeDrilling=null;
+
+  localStorage.removeItem(STORAGE_KEY+"_active");
+
+  if(timerInterval){
+
+    clearInterval(timerInterval);
+
+    timerInterval=null;
+
+  }
+
+  saveData();
+
+  updateAll();
+
+  alert("Бурение сохранено");
+}
+
+
+function saveActiveDrilling(){
+
+  localStorage.setItem(
+    STORAGE_KEY+"_active",
+    JSON.stringify(activeDrilling)
+  );
+}
+
+
+function loadActiveDrilling(){
+
+  const saved=
+    localStorage.getItem(STORAGE_KEY+"_active");
+
+  if(saved){
+
+    try{
+
+      activeDrilling=JSON.parse(saved);
+
+      if(activeDrilling){
+
+        startTimer();
+
+      }
+
+    }catch(e){
+
+      activeDrilling=null;
+
+    }
+
+  }
+}
+
+
+/* =========================================================
+   PARAMETERS
+========================================================= */
+
+function saveParameters(){
+
+  const p={
+
+    date:new Date().toISOString(),
+
+    hole:data.hole.number,
+
+    depth:getCurrentDepth(),
+
+    pressure:document.getElementById("rcPressure").value,
+
+    air:document.getElementById("rcAir").value,
+
+    rpm:document.getElementById("rcRpm").value,
+
+    load:document.getElementById("rcLoad").value,
+
+    feed:document.getElementById("rcFeed").value,
+
+    oil:document.getElementById("rcOil").value,
+
+    note:document.getElementById("rcNote").value
+  };
+
+  data.parameters.push(p);
+
+  saveData();
+
+  alert("Параметры сохранены");
+}
+
+
+/* =========================================================
+   DOWNTIME
+========================================================= */
+
+function saveDowntime(){
+
+  const minutes=
+    parseInt(
+      document.getElementById("downtimeMinutes").value
+    );
+
+  if(!minutes || minutes<=0){
+
+    alert("Введите время простоя");
+
+    return;
+  }
+
+  data.downtime.push({
+
+    date:new Date().toISOString(),
+
+    reason:
+      document.getElementById("downtimeReason").value,
+
+    minutes:minutes,
+
+    note:
+      document.getElementById("downtimeNote").value
+  });
+
+  document.getElementById("downtimeMinutes").value="";
+  document.getElementById("downtimeNote").value="";
+
+  saveData();
+
+  updateAll();
+
+  alert("Простой добавлен");
+}
+
+
+/* =========================================================
+   HISTORY
+========================================================= */
+
+function renderHistory(){
+
+  const box=document.getElementById("historyList");
+
+  if(!data.drillings.length){
+
+    box.innerHTML=
+      `<div class="empty">Бурений пока нет</div>`;
+
+    return;
+  }
+
+  let html="";
+
+  [...data.drillings]
+    .reverse()
+    .forEach((d,index)=>{
+
+      const time=formatTime(d.pureMs);
+
+      html+=`
+
+        <div class="record">
+
+          <div class="record-title">
+            ⛏️ Бурение №${d.number}
+          </div>
+
+          <div>
+            <span class="badge">
+              Скважина ${d.hole||"—"}
+            </span>
+
+            <span class="badge">
+              ${d.meters.toFixed(2)} м
+            </span>
+          </div>
+
+          <div class="record-small">
+
+            Глубина:
+            ${d.startDepth.toFixed(2)}
+            → 
+            ${d.endDepth.toFixed(2)} м
+            <br>
+
+            Чистое время:
+            ${time}
+            <br>
+
+            ${new Date(d.date).toLocaleString("ru-RU")}
+
+          </div>
+
+          <button
+            class="btn-red"
+            style="margin-top:8px;width:100%"
+            onclick="deleteDrilling('${d.id}')">
+            Удалить
+          </button>
+
+        </div>
+
+      `;
+
+    });
+
+  box.innerHTML=html;
+}
+
+
+function deleteDrilling(id){
+
+  if(!confirm("Удалить это бурение?")) return;
+
+  data.drillings=
+    data.drillings.filter(d=>String(d.id)!==String(id));
+
+  saveData();
+
+  updateAll();
+}
+
+
+/* =========================================================
+   HOLE INFO
+========================================================= */
+
+function updateHoleInfo(){
+
+  const h=data.hole;
+
+  if(!h.number){
+
+    document.getElementById("holeInfo").innerHTML=
+      `<div class="empty">Паспорт пока не заполнен</div>`;
+
+    return;
+  }
+
+  document.getElementById("holeInfo").innerHTML=`
+
+    <div class="kpi">
+      <span>Скважина</span>
+      <strong>${escapeHtml(h.number)}</strong>
+    </div>
+
+    <div class="kpi">
+      <span>Проектная глубина</span>
+      <strong>${h.projectDepth||0} м</strong>
+    </div>
+
+    <div class="kpi">
+      <span>Диаметр</span>
+      <strong>${escapeHtml(h.diameter||"—")} мм</strong>
+    </div>
+
+    <div class="kpi">
+      <span>Коронка</span>
+      <strong>${escapeHtml(h.bitType||"—")}</strong>
+    </div>
+
+    <div class="kpi">
+      <span>X / Y / Z</span>
+      <strong>
+        ${escapeHtml(h.x||"—")} /
+        ${escapeHtml(h.y||"—")} /
+        ${escapeHtml(h.z||"—")}
+      </strong>
+    </div>
+
+    <div class="kpi">
+      <span>Азимут</span>
+      <strong>${escapeHtml(h.azimuth||"—")}°</strong>
+    </div>
+
+    ${
+      h.note
+      ?
+      `<p class="record-small">
+        ${escapeHtml(h.note)}
+      </p>`
+      :
+      ""
+    }
+
+  `;
+}
+
+
+/* =========================================================
+   TOOL INFO
+========================================================= */
+
+function updateToolInfo(){
+
+  const t=data.tool;
+
+  if(!t.id){
+
+    document.getElementById("toolInfo").innerHTML=
+      `<div class="empty">Инструмент не указан</div>`;
+
+    return;
+  }
+
+  const meters=
+    Math.max(0,(t.end||0)-(t.start||0));
+
+  document.getElementById("toolInfo").innerHTML=`
+
+    <div class="kpi">
+      <span>ID инструмента</span>
+      <strong>${escapeHtml(t.id)}</strong>
+    </div>
+
+    <div class="kpi">
+      <span>Начальный метраж</span>
+      <strong>${t.start.toFixed(2)} м</strong>
+    </div>
+
+    <div class="kpi">
+      <span>Конечный метраж</span>
+      <strong>${t.end.toFixed(2)} м</strong>
+    </div>
+
+    <div class="kpi">
+      <span>Проходка инструмента</span>
+      <strong>${meters.toFixed(2)} м</strong>
+    </div>
+
+  `;
+}
+
+
+/* =========================================================
+   REPORT
+========================================================= */
+
+function getTotals(){
+
+  let meters=0;
+  let pure=0;
+  let downtime=0;
+
+  data.drillings.forEach(d=>{
+
+    meters+=Number(d.meters)||0;
+
+    pure+=Number(d.pureMs)||0;
+
+  });
+
+  data.downtime.forEach(d=>{
+
+    downtime+=Number(d.minutes)||0;
+
+  });
+
+  const pureMinutes=pure/60000;
+
+  let speed=0;
+
+  if(pureMinutes>0){
+
+    speed=meters/(pureMinutes/60);
+
+  }
+
+  return{
+
+    meters,
+    drillings:data.drillings.length,
+    pureMinutes,
+    downtime,
+    speed
+  };
+}
+
+
+function updateReport(){
+
+  const t=getTotals();
+
+  document.getElementById("reportMeters").textContent=
+    t.meters.toFixed(2)+" м";
+
+  document.getElementById("reportDrillings").textContent=
+    t.drillings;
+
+  document.getElementById("reportPure").textContent=
+    Math.round(t.pureMinutes)+" мин";
+
+  document.getElementById("reportDown").textContent=
+    t.downtime+" мин";
+
+  document.getElementById("reportSpeed").textContent=
+    t.speed.toFixed(1)+" м/ч";
+
+  document.getElementById("totalMeters").textContent=
+    t.meters.toFixed(1);
+
+  document.getElementById("totalDrillings").textContent=
+    t.drillings;
+
+  document.getElementById("totalPureTime").textContent=
+    Math.round(t.pureMinutes);
+
+  document.getElementById("totalDowntime").textContent=
+    t.downtime;
+}
+
+
+/* =========================================================
+   SHARE REPORT
+========================================================= */
+
+function makeReportText(){
+
+  const t=getTotals();
+
+  const s=data.shift;
+
+  let text="";
+
+  text+="⛏️ RC DRILLER — СМЕННЫЙ ОТЧЁТ\n";
+  text+="============================\n\n";
+
+  text+="Дата: "+(s.date||"—")+"\n";
+  text+="Оператор: "+(s.operator||"—")+"\n";
+  text+="Буровая: "+(s.rig||"—")+"\n";
+  text+="Участок: "+(s.site||"—")+"\n";
+  text+="Смена: "+(s.shiftType||"—")+"\n\n";
+
+  text+="📊 ИТОГИ\n";
+  text+="Метраж: "+t.meters.toFixed(2)+" м\n";
+  text+="Бурений: "+t.drillings+"\n";
+  text+="Чистое время: "+Math.round(t.pureMinutes)+" мин\n";
+  text+="Простой: "+t.downtime+" мин\n";
+  text+="Средняя скорость: "+t.speed.toFixed(1)+" м/ч\n\n";
+
+  text+="⛏️ БУРЕНИЯ\n";
+
+  data.drillings.forEach(d=>{
+
+    text+=
+      "№"+d.number+
+      " | скв. "+(d.hole||"—")+
+      " | "+
+      d.startDepth.toFixed(2)+
+      " → "+
+      d.endDepth.toFixed(2)+
+      " м"+
+      " | "+d.meters.toFixed(2)+" м\n";
+
+  });
+
+  if(data.downtime.length){
+
+    text+="\n🚧 ПРОСТОИ\n";
+
+    data.downtime.forEach(d=>{
+
+      text+=
+        d.reason+
+        ": "+
+        d.minutes+
+        " мин"+
+        (d.note?" — "+d.note:"")+
+        "\n";
+
+    });
+
+  }
+
+  return text;
+}
+
+
+async function shareReport(){
+
+  const text=makeReportText();
+
+  if(navigator.share){
+
+    try{
+
+      await navigator.share({
+        title:"RC Driller — отчёт",
+        text:text
+      });
+
+    }catch(e){}
+
+  }else{
+
+    await copyText(text);
+
+    alert("Отчёт скопирован");
+
+  }
+}
+
+
+async function copyText(text){
+
+  if(navigator.clipboard){
+
+    await navigator.clipboard.writeText(text);
+
+  }else{
+
+    const ta=document.createElement("textarea");
+
+    ta.value=text;
+
+    document.body.appendChild(ta);
+
+    ta.select();
+
+    document.execCommand("copy");
+
+    ta.remove();
+
+  }
+}
+
+
+/* =========================================================
+   CSV
+========================================================= */
+
+function exportCSV(){
+
+  let csv=
+    "Дата,Скважина,Бурение,Начальная глубина,Конечная глубина,Метры,Чистое время\n";
+
+  data.drillings.forEach(d=>{
+
+    csv+=
+      [
+        d.date,
+        d.hole,
+        d.number,
+        d.startDepth,
+        d.endDepth,
+        d.meters,
+        Math.round(d.pureMs/60000)
+      ]
+      .map(v=>`"${String(v).replace(/"/g,'""')}"`)
+      .join(",")+
+      "\n";
+
+  });
+
+  downloadFile(
+    csv,
+    "rc-driller-"+todayString()+".csv",
+    "text/csv;charset=utf-8"
+  );
+}
+
+
+/* =========================================================
+   BACKUP
+========================================================= */
+
+function backupData(){
+
+  const backup={
+
+    version:"6.0",
+
+    created:new Date().toISOString(),
+
+    data:data,
+
+    activeDrilling:activeDrilling
+  };
+
+  const json=
+    JSON.stringify(backup,null,2);
+
+  downloadFile(
+    json,
+    "rc-driller-backup-"+todayString()+".json",
+    "application/json"
+  );
+}
+
+
+function restoreData(event){
+
+  const file=event.target.files[0];
+
+  if(!file) return;
+
+  const reader=new FileReader();
+
+  reader.onload=function(){
+
+    try{
+
+      const backup=
+        JSON.parse(reader.result);
+
+      if(!backup.data){
+
+        alert("Неверный файл резервной копии");
+
+        return;
+      }
+
+      if(!confirm("Заменить текущие данные данными из копии?")){
+
+        return;
+
+      }
+
+      data=backup.data;
+
+      activeDrilling=
+        backup.activeDrilling||null;
+
+      saveData();
+
+      if(activeDrilling){
+
+        saveActiveDrilling();
+
+        startTimer();
+
+      }else{
+
+        localStorage.removeItem(
+          STORAGE_KEY+"_active"
+        );
+
+      }
+
+      fillForms();
+
+      updateAll();
+
+      alert("Данные восстановлены");
+
+    }catch(e){
+
+      alert("Не удалось прочитать файл");
+
+    }
+
+  };
+
+  reader.readAsText(file);
+}
+
+
+/* =========================================================
+   CLEAR
+========================================================= */
+
+function clearAllData(){
+
+  if(!confirm("Удалить ВСЕ данные RC Driller с этого телефона?")){
+
+    return;
+  }
+
+  if(!confirm("Последнее предупреждение. Данные будут потеряны.")){
+
+    return;
+  }
+
+  localStorage.removeItem(STORAGE_KEY);
+
+  localStorage.removeItem(
+    STORAGE_KEY+"_active"
+  );
+
+  location.reload();
+}
+
+
+/* =========================================================
+   DOWNLOAD
+========================================================= */
+
+function downloadFile(content,name,type){
+
+  const blob=
+    new Blob([content],{type:type});
+
+  const url=
+    URL.createObjectURL(blob);
+
+  const a=
+    document.createElement("a");
+
+  a.href=url;
+  a.download=name;
+
+  document.body.appendChild(a);
+
+  a.click();
+
+  a.remove();
+
+  setTimeout(()=>{
+    URL.revokeObjectURL(url);
+  },1000);
+}
+
+
+function todayString(){
+
+  return new Date()
+    .toISOString()
+    .slice(0,10);
+}
+
+
+/* =========================================================
+   FORMS
+========================================================= */
+
+function fillForms(){
+
+  const s=data.shift;
+
+  document.getElementById("reportDate").value=
+    s.date||todayString();
+
+  document.getElementById("operator").value=
+    s.operator||"";
+
+  document.getElementById("rig").value=
+    s.rig||"";
+
+  document.getElementById("site").value=
+    s.site||"";
+
+  document.getElementById("shiftType").value=
+    s.shiftType||"Дневная";
+
+
+  const h=data.hole;
+
+  document.getElementById("holeNumber").value=
+    h.number||"";
+
+  document.getElementById("projectDepth").value=
+    h.projectDepth||"";
+
+  document.getElementById("holeDiameter").value=
+    h.diameter||"";
+
+  document.getElementById("bitType").value=
+    h.bitType||"";
+
+  document.getElementById("coordX").value=
+    h.x||"";
+
+  document.getElementById("coordY").value=
+    h.y||"";
+
+  document.getElementById("coordZ").value=
+    h.z||"";
+
+  document.getElementById("azimuth").value=
+    h.azimuth||"";
+
+  document.getElementById("holeNote").value=
+    h.note||"";
+
+
+  const t=data.tool;
+
+  document.getElementById("toolId").value=
+    t.id||"";
+
+  document.getElementById("toolStart").value=
+    t.start||"";
+
+  document.getElementById("toolEnd").value=
+    t.end||"";
+
+
+  updatePhoto();
+
+}
+
+
+/* =========================================================
+   UI UPDATE
+========================================================= */
+
+function updateStatus(){
+
+  const box=
+    document.getElementById("drillingStatus");
+
+  if(!activeDrilling){
+
+    box.className=
+      "status status-gray";
+
+    box.textContent=
+      "Бурение не запущено";
+
+    return;
+  }
+
+  if(activeDrilling.paused){
+
+    box.className=
+      "status status-orange";
+
+    box.textContent=
+      "⏸ Бурение на паузе";
+
+  }else{
+
+    box.className=
+      "status status-green";
+
+    box.textContent=
+      "● Бурение идёт";
+
+  }
+}
+
+
+function updateButtons(){
+
+  const start=
+    document.getElementById("startBtn");
+
+  const pause=
+    document.getElementById("pauseBtn");
+
+  if(activeDrilling){
+
+    start.disabled=true;
+
+    start.style.opacity=".5";
+
+    pause.disabled=false;
+
+    pause.textContent=
+      activeDrilling.paused
+      ?
+      "▶ Продолжить"
+      :
+      "⏸ Пауза";
+
+  }else{
+
+    start.disabled=false;
+
+    start.style.opacity="1";
+
+    pause.disabled=true;
+
+    pause.textContent="⏸ Пауза";
+
+  }
+}
+
+
+function updateAll(){
+
+  updateDepthDisplay();
+
+  updateStatus();
+
+  updateButtons();
+
+  updateHoleInfo();
+
+  updateToolInfo();
+
+  renderHistory();
+
+  updateReport();
+
+  if(activeDrilling){
+
+    document.getElementById("drillingNumberView").textContent=
+      activeDrilling.number;
+
+    document.getElementById("pureTime").textContent=
+      formatTime(getPureMs());
+
+    updateSpeed();
+
+  }else{
+
+    document.getElementById("drillingNumberView").textContent=
+      "—";
+
+    document.getElementById("pureTime").textContent=
+      "00:00";
+
+    document.getElementById("speedNow").textContent=
+      "0.0";
+
+  }
+}
+
+
+/* =========================================================
+   SECURITY / HTML
+========================================================= */
+
+function escapeHtml(value){
+
+  return String(value)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+
+/* =========================================================
+   START
+========================================================= */
+
+document.addEventListener("DOMContentLoaded",()=>{
+
+  loadData();
+
+  document.getElementById("reportDate").value=
+    document.getElementById("reportDate").value||
+    todayString();
+
+  updateAll();
+
+});
+
+</script>
+
+</body>
+</html>
